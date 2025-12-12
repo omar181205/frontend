@@ -436,3 +436,104 @@ small {
     margin: 5px 0;
     color: #333;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .menu li {
+        margin-bottom: 0;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .menu-link {
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .students-list {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-logout {
+        width: 100%;
+    }
+
+    .manage-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+
+    .tab-btn {
+        border-bottom: 2px solid #e0e0e0;
+        border-left: 3px solid transparent;
+    }
+
+    .tab-btn.active {
+        border-left-color: #667eea;
+        border-bottom-color: #e0e0e0;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-box {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .content-section h2 {
+        font-size: 20px;
+    }
+
+    .course-card,
+    .message-box,
+    .send-message-box {
+        padding: 15px;
+    }
+
+    .grades-table {
+        font-size: 14px;
+    }
+
+    .grades-table th,
+    .grades-table td {
+        padding: 8px;
+    }
+}
