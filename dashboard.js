@@ -41,6 +41,8 @@ function setupEventListeners() {
     document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
     document.getElementById('createCourseForm').addEventListener('submit', createCourse);
     document.getElementById('assignGradeForm').addEventListener('submit', assignGrade);
+    document.getElementById('updateCapacityForm').addEventListener('submit', updateCapacity);
+    document.getElementById('deleteCourseBtn').addEventListener('click', deleteCourse);
     
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
@@ -454,6 +456,75 @@ async function assignGrade(e) {
         }
     } catch (error) {
         alert('Error assigning grade');
+    }
+}
+
+async function updateCapacity(e) {
+    e.preventDefault();
+    
+    const newCapacity = document.getElementById('newCapacity').value;
+    
+    if (!currentCourseId) {
+        alert('Please select a course first');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/courses/${currentCourseId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                CAPACITY: parseInt(newCapacity)
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            alert('Capacity updated successfully!');
+            document.getElementById('updateCapacityForm').reset();
+            loadCourses();
+        } else {
+            alert(data.error || 'Failed to update capacity');
+        }
+    } catch (error) {
+        alert('Error updating capacity');
+    }
+}
+
+async function deleteCourse() {
+    if (!currentCourseId) {
+        alert('Please select a course first');
+        return;
+    }
+    
+    if (!confirm('Are you sure you want to delete this course?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/courses/${currentCourseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            alert('Course deleted successfully!');
+            currentCourseId = null;
+            switchSection('create-course');
+            loadCourses();
+        } else {
+            alert(data.error || 'Failed to delete course');
+        }
+    } catch (error) {
+        alert('Error deleting course');
     }
 }
 

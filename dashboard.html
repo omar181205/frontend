@@ -88,6 +88,7 @@
                 <div class="manage-tabs">
                     <button class="tab-btn active" data-tab="students">Students</button>
                     <button class="tab-btn" data-tab="assign-grades">Assign Grades</button>
+                    <button class="tab-btn" data-tab="manage-settings">Settings</button>
                 </div>
 
                 <div id="students-tab" class="tab-content active">
@@ -112,6 +113,22 @@
                     <div style="margin-top: 30px;">
                         <h3>Course Grades</h3>
                         <div id="courseGradesTable"></div>
+                    </div>
+                </div>
+
+                <div id="manage-settings-tab" class="tab-content">
+                    <h3>Course Settings</h3>
+                    
+                    <form id="updateCapacityForm" class="create-form">
+                        <div class="form-group">
+                            <label for="newCapacity">Update Capacity</label>
+                            <input type="number" id="newCapacity" min="1" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Update Capacity</button>
+                    </form>
+
+                    <div style="margin-top: 30px;">
+                        <button id="deleteCourseBtn" class="btn-delete">Delete Course</button>
                     </div>
                 </div>
             </section>

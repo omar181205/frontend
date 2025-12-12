@@ -285,6 +285,21 @@ small {
     background: #5568d3;
 }
 
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+}
+
 .grades-container {
     margin-top: 20px;
 }
