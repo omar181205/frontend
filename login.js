@@ -30,14 +30,19 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('user', JSON.stringify(data.user));
             window.location.href = 'dashboard.html';
         } else {
-            showError(data.message || 'Login failed');
+            showError(data.message || data.error || 'Invalid email or password');
         }
     } catch (error) {
-        showError('Connection error. Please try again.');
+        console.error('Login error:', error);
+        showError('Server error. Please try again later.');
     }
 });
 
 function showError(message) {
     errorMessage.textContent = message;
     errorMessage.classList.add('show');
+    setTimeout(() => {
+        errorMessage.classList.remove('show');
+    }, 5000);
 }
+

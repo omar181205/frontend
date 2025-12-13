@@ -1,5 +1,4 @@
 const API_URL = 'http://localhost:5000';
-
 let currentUser = null;
 let token = null;
 
@@ -11,51 +10,39 @@ window.addEventListener('DOMContentLoaded', () => {
 function checkAuth() {
     token = localStorage.getItem('token');
     const userString = localStorage.getItem('user');
-    
     if (!token || !userString) {
         window.location.href = 'login.html';
         return;
     }
-    
     currentUser = JSON.parse(userString);
     document.getElementById('userName').textContent = currentUser.email;
-    
     if (currentUser.role === 'teacher') {
         document.getElementById('createCourseMenu').style.display = 'block';
     }
-    
     loadCourses();
 }
 
 function setupEventListeners() {
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    
-    const menuLinks = document.querySelectorAll('.menu-link');
-    menuLinks.forEach(link => {
+    document.querySelectorAll('.menu-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             switchSection(e.target.dataset.section);
         });
     });
-    
     document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
     document.getElementById('createCourseForm').addEventListener('submit', createCourse);
     document.getElementById('assignGradeForm').addEventListener('submit', assignGrade);
     document.getElementById('updateCapacityForm').addEventListener('submit', updateCapacity);
     document.getElementById('deleteCourseBtn').addEventListener('click', deleteCourse);
-    
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            switchTab(e.target.dataset.tab);
-        });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => switchTab(e.target.dataset.tab));
     });
 }
 
 function switchTab(tab) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    
     document.getElementById(`${tab}-tab`).classList.add('active');
     document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
 }
@@ -63,37 +50,26 @@ function switchTab(tab) {
 function switchSection(section) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-    
     document.getElementById(`${section}-section`).classList.add('active');
     document.querySelector(`[data-section="${section}"]`).classList.add('active');
-    
-    if (section === 'courses') {
-        loadCourses();
-    } else if (section === 'grades') {
-        loadGrades();
-    } else if (section === 'messages') {
-        loadMessages();
-    }
+    if (section === 'courses') loadCourses();
+    else if (section === 'grades') loadGrades();
+    else if (section === 'messages') loadMessages();
 }
 
 async function loadCourses() {
     try {
         if (currentUser.role === 'user') {
             const response = await fetch(`${API_URL}/enrolments/students/me/courses`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
             displayMyCourses(data.courses);
-            
             document.getElementById('allCoursesSection').style.display = 'block';
-            loadAllCourses();
-        } else {
-            loadAllCourses();
         }
+        loadAllCourses();
     } catch (error) {
-        console.error('Error loading courses:', error);
+        alert('Error loading courses');
     }
 }
 
@@ -103,18 +79,16 @@ async function loadAllCourses() {
         const data = await response.json();
         displayAllCourses(data.courses);
     } catch (error) {
-        console.error('Error loading all courses:', error);
+        alert('Error loading courses');
     }
 }
 
 function displayMyCourses(courses) {
     const grid = document.getElementById('coursesGrid');
-    
     if (!courses || courses.length === 0) {
         grid.innerHTML = '<p>You are not enrolled in any courses yet.</p>';
         return;
     }
-    
     grid.innerHTML = courses.map(course => `
         <div class="course-card">
             <h3>Course: ${course.COURSE_ID}</h3>
@@ -125,15 +99,11 @@ function displayMyCourses(courses) {
 }
 
 function displayAllCourses(courses) {
-    const grid = currentUser.role === 'user' 
-        ? document.getElementById('allCoursesGrid')
-        : document.getElementById('coursesGrid');
-    
+    const grid = currentUser.role === 'user' ? document.getElementById('allCoursesGrid') : document.getElementById('coursesGrid');
     if (!courses || courses.length === 0) {
         grid.innerHTML = '<p>No courses available.</p>';
         return;
     }
-    
     if (currentUser.role === 'user') {
         grid.innerHTML = courses.map(course => `
             <div class="course-card">
@@ -151,12 +121,10 @@ function displayAllCourses(courses) {
 function displayTeacherCourses(courses) {
     const teacherCourses = courses.filter(c => c.USER_ID === currentUser.id);
     const grid = document.getElementById('teacherCoursesGrid');
-    
     if (!teacherCourses || teacherCourses.length === 0) {
         grid.innerHTML = '<p>You have not created any courses yet.</p>';
         return;
     }
-    
     grid.innerHTML = teacherCourses.map(course => `
         <div class="course-card">
             <h3>${course.COURSE_NAME}</h3>
@@ -170,18 +138,10 @@ async function enrollInCourse(courseId) {
     try {
         const response = await fetch(`${API_URL}/enrolments/courses/${courseId}/enrollments`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                STUDENT_ID: currentUser.id,
-                EMAIL: currentUser.email
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ STUDENT_ID: currentUser.id, EMAIL: currentUser.email })
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Enrolled successfully!');
             loadCourses();
@@ -198,43 +158,28 @@ async function loadGrades() {
         document.getElementById('gradesTable').innerHTML = '<p>Grades view is for students only.</p>';
         return;
     }
-    
     try {
         const response = await fetch(`${API_URL}/grades/students/me/grades`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         displayGrades(data.grades);
     } catch (error) {
-        console.error('Error loading grades:', error);
+        alert('Error loading grades');
     }
 }
 
 function displayGrades(grades) {
     const container = document.getElementById('gradesTable');
-    
     if (!grades || grades.length === 0) {
         container.innerHTML = '<p>No grades available yet.</p>';
         return;
     }
-    
     container.innerHTML = `
         <table class="grades-table">
-            <thead>
-                <tr>
-                    <th>Course ID</th>
-                    <th>Grade</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Course ID</th><th>Grade</th></tr></thead>
             <tbody>
-                ${grades.map(grade => `
-                    <tr>
-                        <td>${grade.COURSE_ID}</td>
-                        <td>${grade.GRADE_VALUE || 'Not graded'}</td>
-                    </tr>
-                `).join('')}
+                ${grades.map(grade => `<tr><td>${grade.COURSE_ID}</td><td>${grade.GRADE_VALUE || 'Not graded'}</td></tr>`).join('')}
             </tbody>
         </table>
     `;
@@ -243,31 +188,27 @@ function displayGrades(grades) {
 async function loadMessages() {
     try {
         const response = await fetch(`${API_URL}/messages/me`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         displayMessages(data.messages);
     } catch (error) {
-        console.error('Error loading messages:', error);
+        alert('Error loading messages');
     }
 }
 
 function displayMessages(messages) {
     const container = document.getElementById('messagesContainer');
-    
     if (!messages || messages.length === 0) {
         container.innerHTML = '<p>No messages yet.</p>';
         return;
     }
-    
     container.innerHTML = messages.map(msg => {
         const history = msg.MESSAGES_HISTORY ? msg.MESSAGES_HISTORY.split('|||') : [];
         return `
             <div class="message-box">
-                <p><strong>From User ID:</strong> ${msg.FROM_USER_ID}</p>
-                <p><strong>To User ID:</strong> ${msg.TO_USER_ID}</p>
+                <p><strong>From:</strong> ${msg.FROM_USER_ID}</p>
+                <p><strong>To:</strong> ${msg.TO_USER_ID}</p>
                 <div class="message-history">
                     ${history.map(m => `<p class="message-item">${m}</p>`).join('')}
                 </div>
@@ -279,27 +220,17 @@ function displayMessages(messages) {
 async function sendMessage() {
     const recipientId = document.getElementById('recipientId').value;
     const messageText = document.getElementById('messageText').value;
-    
     if (!recipientId || !messageText) {
         alert('Please fill in all fields');
         return;
     }
-    
     try {
         const response = await fetch(`${API_URL}/messages`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                TO_USER_ID: parseInt(recipientId),
-                MESSAGE_TEXT: messageText
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ TO_USER_ID: parseInt(recipientId), MESSAGE_TEXT: messageText })
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Message sent!');
             document.getElementById('recipientId').value = '';
@@ -315,26 +246,15 @@ async function sendMessage() {
 
 async function createCourse(e) {
     e.preventDefault();
-    
     const courseName = document.getElementById('courseName').value;
     const capacity = document.getElementById('capacity').value;
-    
     try {
         const response = await fetch(`${API_URL}/courses`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                COURSE_NAME: courseName,
-                USER_ID: currentUser.id,
-                CAPACITY: parseInt(capacity)
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ COURSE_NAME: courseName, USER_ID: currentUser.id, CAPACITY: parseInt(capacity) })
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Course created successfully!');
             document.getElementById('createCourseForm').reset();
@@ -361,22 +281,18 @@ async function loadEnrolledStudents(courseId) {
     try {
         const response = await fetch(`${API_URL}/enrolments/courses/${courseId}/students`);
         const data = await response.json();
-        console.log('Students loaded:', data);
         displayEnrolledStudents(data.students || data);
     } catch (error) {
-        console.error('Error loading students:', error);
         document.getElementById('enrolledStudents').innerHTML = '<p>Error loading students</p>';
     }
 }
 
 function displayEnrolledStudents(students) {
     const container = document.getElementById('enrolledStudents');
-    
     if (!students || students.length === 0) {
         container.innerHTML = '<p>No students enrolled yet.</p>';
         return;
     }
-    
     container.innerHTML = students.map(student => `
         <div class="student-card">
             <p><strong>Student ID:</strong> ${student.STUDENT_ID}</p>
@@ -391,33 +307,21 @@ async function loadCourseGrades(courseId) {
         const data = await response.json();
         displayCourseGrades(data.grades);
     } catch (error) {
-        console.error('Error loading grades:', error);
+        alert('Error loading grades');
     }
 }
 
 function displayCourseGrades(grades) {
     const container = document.getElementById('courseGradesTable');
-    
     if (!grades || grades.length === 0) {
         container.innerHTML = '<p>No grades assigned yet.</p>';
         return;
     }
-    
     container.innerHTML = `
         <table class="grades-table">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Grade</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Student ID</th><th>Grade</th></tr></thead>
             <tbody>
-                ${grades.map(grade => `
-                    <tr>
-                        <td>${grade.STUDENT_ID}</td>
-                        <td>${grade.GRADE_VALUE || 'Not graded'}</td>
-                    </tr>
-                `).join('')}
+                ${grades.map(grade => `<tr><td>${grade.STUDENT_ID}</td><td>${grade.GRADE_VALUE || 'Not graded'}</td></tr>`).join('')}
             </tbody>
         </table>
     `;
@@ -425,31 +329,19 @@ function displayCourseGrades(grades) {
 
 async function assignGrade(e) {
     e.preventDefault();
-    
     const studentId = document.getElementById('studentId').value;
     const gradeValue = document.getElementById('gradeValue').value;
-    
     if (!currentCourseId) {
         alert('Please select a course first');
         return;
     }
-    
     try {
         const response = await fetch(`${API_URL}/grades`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                STUDENT_ID: parseInt(studentId),
-                COURSE_ID: currentCourseId,
-                GRADE_VALUE: gradeValue
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ STUDENT_ID: parseInt(studentId), COURSE_ID: currentCourseId, GRADE_VALUE: gradeValue })
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Grade assigned successfully!');
             document.getElementById('assignGradeForm').reset();
@@ -464,28 +356,18 @@ async function assignGrade(e) {
 
 async function updateCapacity(e) {
     e.preventDefault();
-    
     const newCapacity = document.getElementById('newCapacity').value;
-    
     if (!currentCourseId) {
         alert('Please select a course first');
         return;
     }
-    
     try {
         const response = await fetch(`${API_URL}/courses/${currentCourseId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                CAPACITY: parseInt(newCapacity)
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ CAPACITY: parseInt(newCapacity) })
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Capacity updated successfully!');
             document.getElementById('updateCapacityForm').reset();
@@ -503,21 +385,15 @@ async function deleteCourse() {
         alert('Please select a course first');
         return;
     }
-    
     if (!confirm('Are you sure you want to delete this course?')) {
         return;
     }
-    
     try {
         const response = await fetch(`${API_URL}/courses/${currentCourseId}`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             alert('Course deleted successfully!');
             currentCourseId = null;

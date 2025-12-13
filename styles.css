@@ -3,16 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .container {
     width: 100%;
     max-width: 450px;
@@ -54,7 +52,6 @@ input, select {
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
-    transition: border-color 0.3s;
 }
 
 input:focus, select:focus {
@@ -72,18 +69,16 @@ small {
 .btn-primary {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s;
 }
-
 .btn-primary:hover {
-    transform: translateY(-2px);
+    background: #5568d3;
 }
 
 .error-message {
@@ -122,7 +117,7 @@ small {
 }
 
 .navbar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     padding: 15px 0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -154,18 +149,16 @@ small {
 }
 
 .btn-logout {
-    background: rgba(255, 255, 255, 0.2);
+    background: #5568d3;
     color: white;
     border: 2px solid white;
     padding: 8px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.3s;
 }
-
 .btn-logout:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #445aa8;
 }
 
 .dashboard-container {
@@ -199,7 +192,6 @@ small {
     color: #333;
     text-decoration: none;
     border-radius: 5px;
-    transition: background 0.3s;
 }
 
 .menu-link:hover {
@@ -207,7 +199,7 @@ small {
 }
 
 .menu-link.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     color: white;
 }
 
@@ -251,11 +243,8 @@ small {
     padding: 20px;
     border-radius: 10px;
     border: 2px solid #e0e0e0;
-    transition: transform 0.3s;
 }
-
 .course-card:hover {
-    transform: translateY(-5px);
     border-color: #667eea;
 }
 
@@ -413,7 +402,6 @@ small {
     font-size: 16px;
     color: #666;
     border-bottom: 3px solid transparent;
-    transition: all 0.3s;
 }
 
 .tab-btn:hover {
@@ -591,11 +579,9 @@ small {
     border-radius: 8px;
     font-size: 18px;
     font-weight: 600;
-    transition: transform 0.2s;
 }
-
 .landing-buttons a:hover {
-    transform: translateY(-3px);
+    opacity: 0.9;
 }
 
 .btn-secondary {
@@ -625,26 +611,21 @@ small {
     color: #666;
     font-size: 16px;
 }
-
 @media (max-width: 768px) {
     .landing-title {
         font-size: 36px;
     }
-
     .landing-description {
         font-size: 18px;
     }
-
     .landing-buttons {
         flex-direction: column;
         align-items: center;
     }
-
     .landing-buttons a {
         width: 100%;
         max-width: 300px;
     }
-
     .features {
         grid-template-columns: 1fr;
         gap: 20px;
