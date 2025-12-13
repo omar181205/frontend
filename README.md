@@ -1,0 +1,1 @@
+this repo conatins the frontend of my enrollment system with everything u need to know such as the login page with its fucntions created in a js file and a html file and same with login and for the dashboard i have all the commands in this file with its html 
