@@ -117,8 +117,9 @@ function displayMyCourses(courses) {
     
     grid.innerHTML = courses.map(course => `
         <div class="course-card">
-            <h3>Course ID: ${course.COURSE_ID}</h3>
-            <p>Email: ${course.EMAIL}</p>
+            <h3>Course: ${course.COURSE_ID}</h3>
+            <p><strong>Status:</strong> Enrolled</p>
+            <p><strong>Email:</strong> ${course.EMAIL}</p>
         </div>
     `).join('');
 }
@@ -337,7 +338,7 @@ async function createCourse(e) {
         if (response.ok) {
             alert('Course created successfully!');
             document.getElementById('createCourseForm').reset();
-            loadCourses();
+            await loadAllCourses();
         } else {
             alert(data.error || 'Failed to create course');
         }
@@ -360,9 +361,11 @@ async function loadEnrolledStudents(courseId) {
     try {
         const response = await fetch(`${API_URL}/enrolments/courses/${courseId}/students`);
         const data = await response.json();
-        displayEnrolledStudents(data.students);
+        console.log('Students loaded:', data);
+        displayEnrolledStudents(data.students || data);
     } catch (error) {
         console.error('Error loading students:', error);
+        document.getElementById('enrolledStudents').innerHTML = '<p>Error loading students</p>';
     }
 }
 
