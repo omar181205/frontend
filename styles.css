@@ -452,7 +452,6 @@ small {
     color: #333;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
@@ -550,5 +549,104 @@ small {
     .grades-table th,
     .grades-table td {
         padding: 8px;
+    }
+}
+
+.landing-container {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    text-align: center;
+}
+
+.landing-content {
+    background: white;
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.landing-title {
+    font-size: 48px;
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.landing-description {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.landing-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.landing-buttons a {
+    text-decoration: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.landing-buttons a:hover {
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.feature-item {
+    padding: 20px;
+}
+
+.feature-item h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.feature-item p {
+    color: #666;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .landing-title {
+        font-size: 36px;
+    }
+
+    .landing-description {
+        font-size: 18px;
+    }
+
+    .landing-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .landing-buttons a {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 }
